@@ -20,9 +20,6 @@ import java.util.List;
 @Service
 public class ExpenseService {
 
-    @Value("${content.per.page}")
-    private String pageSizeStr;
-
     @Autowired
     private MongoTemplate mongoTemplate;
 
