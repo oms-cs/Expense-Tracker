@@ -1,8 +1,7 @@
 version: '3.8'
 services:
     expense-tracker:
-      build:
-        context: .
+      image: parthkarad/expense-tracker:${TAG}
       hostname: expense-java-app
       ports:
         - "8081:8080"
