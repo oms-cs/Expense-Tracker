@@ -21,13 +21,10 @@ services:
       ports:
         - 27017:27017
       volumes:
-        - mongodb:/data/db
-        - mongodb_config:/data/configdb
+        - /home/om17/mongodb:/data/db
+        - /home/om17/mongodb_config:/data/configdb
       networks:
         - expense
-volumes:
- mongodb:
- mongodb_config:
 
 networks:
   expense:

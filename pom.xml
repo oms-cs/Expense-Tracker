@@ -9,8 +9,8 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.springbooot.tutorials</groupId>
-	<artifactId>spring-mongodb-demo</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>springmongodbdemo</artifactId>
+	<version>1.1</version>
 	<name>spring-mongodb-demo</name>
 	<description>Spring MongodbDemo</description>
 	<properties>
