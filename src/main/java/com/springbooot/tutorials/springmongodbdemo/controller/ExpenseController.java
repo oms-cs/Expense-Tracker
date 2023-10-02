@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/expense")
+@CrossOrigin(origins = "*")
 public class ExpenseController {
 
     private final ExpenseService expenseService;
@@ -18,7 +19,6 @@ public class ExpenseController {
     }
 
     @PostMapping("/add")
-    @CrossOrigin(origins = "*")
     public ResponseEntity addExpense(@RequestBody Expense expense){
         expenseService.addExpense(expense);
         return ResponseEntity.status(HttpStatus.CREATED).build();
