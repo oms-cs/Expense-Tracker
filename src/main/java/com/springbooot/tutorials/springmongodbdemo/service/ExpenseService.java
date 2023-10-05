@@ -1,5 +1,6 @@
 package com.springbooot.tutorials.springmongodbdemo.service;
 
+import com.springbooot.tutorials.springmongodbdemo.exception.DuplicateDataException;
 import com.springbooot.tutorials.springmongodbdemo.exception.NotFoundException;
 import com.springbooot.tutorials.springmongodbdemo.model.Expense;
 import com.springbooot.tutorials.springmongodbdemo.repository.ExpenseRepository;
@@ -30,12 +31,18 @@ public class ExpenseService {
         this.mongoTemplate = mongoTemplate;
     }
 
-    public void addExpense(Expense expense){
-        expenseRepository.insert(expense);
+    public Expense addExpense(Expense expense){
+        var existingExpense = expenseRepository.findById(expense.getId());
+        Expense addedExpense = null;
+        if(!existingExpense.isEmpty()) {
+            throw new DuplicateDataException("Expense With Id : "+expense.getId() + "Already Exists!! Try with Another Id.");
+        }
+        addedExpense = expenseRepository.insert(expense);
+        return addedExpense;
     }
     public void updateExpense(Expense expense){
         Expense savedExpense = expenseRepository.findById(expense.getId())
-                .orElseThrow(() -> new RuntimeException("Unable to Find Expense with Id :"+expense.getId()));
+                .orElseThrow(() -> new NotFoundException("Unable to Find Expense with Id :"+expense.getId()));
         savedExpense.setExpenseName(expense.getExpenseName());
         savedExpense.setExpenseAmount(expense.getExpenseAmount());
         savedExpense.setExpenseCategory(expense.getExpenseCategory());
@@ -44,6 +51,7 @@ public class ExpenseService {
     public List<Expense> getAllExpenses(int page, int limit){
         Pageable pageable = PageRequest.of(page, limit);
         Page<Expense> expensesPage =  expenseRepository.findAll(pageable);
+        if(expensesPage.isEmpty() || expensesPage == null) throw new NotFoundException("No Records Found !!");
         return expensesPage.getContent();
     }
     public Expense getExpenseByName(String expenseName){
