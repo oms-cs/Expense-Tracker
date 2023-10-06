@@ -48,6 +48,12 @@ public class ExpenseController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
+    @DeleteMapping("/delete-all-expense")
+    public ResponseEntity deleteAllExpense(){
+        expenseService.deleteAllExpense();
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
     public List<Expense> searchInExpense(@RequestParam String expenseName){

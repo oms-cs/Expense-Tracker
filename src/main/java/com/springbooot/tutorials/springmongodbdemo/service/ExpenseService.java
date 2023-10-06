@@ -65,6 +65,10 @@ public class ExpenseService {
          expenseRepository.deleteById(expense.getId());
     }
 
+    public void deleteAllExpense(){
+        expenseRepository.deleteAll();
+    }
+
     public List<Expense> fullTextSearch(String searchPhrase) {
 
         mongoTemplate.indexOps(Expense.class)
