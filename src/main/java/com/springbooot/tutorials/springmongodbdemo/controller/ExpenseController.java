@@ -48,7 +48,7 @@ public class ExpenseController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
-    @DeleteMapping("/delete-all-expense")
+    @DeleteMapping("/delete-all-expenses")
     public ResponseEntity deleteAllExpense(){
         expenseService.deleteAllExpense();
         return ResponseEntity.status(HttpStatus.OK).build();
