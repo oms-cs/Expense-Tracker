@@ -54,15 +54,18 @@ public class ExpenseService {
         if(expensesPage.isEmpty() || expensesPage == null) throw new NotFoundException("No Records Found !!");
         return expensesPage.getContent();
     }
-    public Expense getExpenseByName(String expenseName){
+    public Expense getExpenseByName(String expenseName, String user){
         Expense expense =  expenseRepository.findByExpenseName(expenseName);
         if(expense ==  null){
             throw new NotFoundException("Expense "+expenseName+" Not Found!!");
         }
+        if(!expense.getUser().equalsIgnoreCase(user)){
+            throw new NotFoundException("Expense "+expenseName+" Not Found!!");
+        }
         return expense;
     }
-    public void deleteExpense(Expense expense){
-         expenseRepository.deleteById(expense.getId());
+    public void deleteExpense(String expenseId){
+         expenseRepository.deleteById(expenseId);
     }
 
     public void deleteAllExpense(){

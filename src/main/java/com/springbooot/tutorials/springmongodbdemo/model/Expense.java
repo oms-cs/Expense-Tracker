@@ -21,6 +21,8 @@ public class Expense {
     @Field(name = "amount")
     private BigDecimal expenseAmount;
 
+    @Field(name = "user")
+    private String user;
     @Field(name = "attributes")
     @TextIndexed(weight = 4)
     private List<ExpenseAtttibute> attributes;
@@ -81,5 +83,24 @@ public class Expense {
 
     public void setAttributes(List<ExpenseAtttibute> attributes) {
         this.attributes = attributes;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    @Override
+    public String toString() {
+        return "Expense{" +
+                "id='" + id + '\'' +
+                ", expenseName='" + expenseName + '\'' +
+                ", expenseCategory=" + expenseCategory +
+                ", expenseAmount=" + expenseAmount +
+                ", attributes=" + attributes +
+                '}';
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -19,13 +20,20 @@ public class ExpenseController {
 
     @PostMapping("/add")
     @CrossOrigin(originPatterns = "*")
-    public ResponseEntity addExpense(@RequestBody Expense expense){
+    public ResponseEntity addExpense(@RequestBody Expense expense, Principal principal){
+        expense.setUser(principal.getName());
         expenseService.addExpense(expense);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body("Expense "+expense.getExpenseName() + " Added Successfully!");
+    }
+
+    @GetMapping("/private")
+    public String privatePage(){
+        return "This is Private Page";
     }
 
     @PutMapping("/update-expense")
-    public ResponseEntity updateExpense(@RequestBody Expense expense){
+    public ResponseEntity updateExpense(@RequestBody Expense expense, Principal principal){
+        expense.setUser(principal.getName());
         expenseService.updateExpense(expense);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -33,18 +41,21 @@ public class ExpenseController {
     @GetMapping("/all-expenses")
     @ResponseStatus(HttpStatus.OK)
     public List<Expense> getAllExpenses(@RequestParam(value = "page", defaultValue = "0") int page,
-                                        @RequestParam(value = "limit", defaultValue = "10") int limit){
-        return expenseService.getAllExpenses(page, limit);
+                                        @RequestParam(value = "limit", defaultValue = "10") int limit,
+                                        Principal principal){
+        List<Expense> expenses = expenseService.getAllExpenses(page, limit);
+
+        return expenses.stream().filter(expense -> expense.getUser().equalsIgnoreCase(principal.getName())).toList();
     }
     @GetMapping("/get-expense/{expenseName}")
     @ResponseStatus(HttpStatus.OK)
-    public Expense getExpenseByName(@PathVariable String expenseName){
-        return expenseService.getExpenseByName(expenseName);
+    public Expense getExpenseByName(@PathVariable String expenseName,Principal principal){
+        return expenseService.getExpenseByName(expenseName, principal.getName());
     }
 
     @DeleteMapping("/delete-expense")
-    public ResponseEntity deleteExpense(@RequestBody Expense expense){
-        expenseService.deleteExpense(expense);
+    public ResponseEntity deleteExpense(@RequestBody String expenseId){
+        expenseService.deleteExpense(expenseId);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
