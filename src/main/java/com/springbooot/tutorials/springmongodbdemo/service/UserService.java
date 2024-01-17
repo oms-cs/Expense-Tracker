@@ -1,5 +1,6 @@
 package com.springbooot.tutorials.springmongodbdemo.service;
 
+import com.springbooot.tutorials.springmongodbdemo.exception.UserAlreadyExists;
 import com.springbooot.tutorials.springmongodbdemo.model.SecurityUser;
 import com.springbooot.tutorials.springmongodbdemo.model.User;
 import com.springbooot.tutorials.springmongodbdemo.repository.UserRepository;
@@ -26,7 +27,17 @@ public class UserService implements UserDetailsService {
         return user.map(SecurityUser::new).orElseThrow(() -> new UsernameNotFoundException("User Not Found!!"));
     }
 
+
+    public User getUserDetails(String username) throws UsernameNotFoundException {
+        Optional<User> user = userRepository.findByUsername(username);
+        return user.orElseThrow(() -> new UsernameNotFoundException("User Not Found!!"));
+    }
+
     public User registerUser(User user){
+        User doesUserExist = userRepository.findByUsername(user.getUsername()).orElse(null);
+        if(!(doesUserExist == null)){
+            throw new UserAlreadyExists("User { "+user.getUsername()+" } Already Exists");
+        }
         user.setPassword(user.getPassword());
         userRepository.save(user);
         return user;

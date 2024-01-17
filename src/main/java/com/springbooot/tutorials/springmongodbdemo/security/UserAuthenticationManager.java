@@ -1,14 +1,11 @@
 package com.springbooot.tutorials.springmongodbdemo.security;
 
-import com.springbooot.tutorials.springmongodbdemo.model.SecurityUser;
-import com.springbooot.tutorials.springmongodbdemo.model.User;
 import com.springbooot.tutorials.springmongodbdemo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 public class UserAuthenticationManager implements AuthenticationManager {

@@ -1,7 +1,9 @@
 package com.springbooot.tutorials.springmongodbdemo.controller;
 
+import com.springbooot.tutorials.springmongodbdemo.exception.NotFoundException;
 import com.springbooot.tutorials.springmongodbdemo.model.Expense;
 import com.springbooot.tutorials.springmongodbdemo.service.ExpenseService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,31 +13,34 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/expense")
+@Log4j2
 public class ExpenseController {
 
-    private final ExpenseService expenseService;
+    private final ExpenseService expenseService; // Inject ExpenseService via ExpenseController Constructor
     public  ExpenseController(ExpenseService expenseService){
         this.expenseService = expenseService;
     }
 
+
     @PostMapping("/add")
-    @CrossOrigin(originPatterns = "*")
     public ResponseEntity addExpense(@RequestBody Expense expense, Principal principal){
+        log.info("addExpense Endpoint accessed by User {}",principal.getName());
         expense.setUser(principal.getName());
-        expenseService.addExpense(expense);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Expense "+expense.getExpenseName() + " Added Successfully!");
+        return ResponseEntity.status(HttpStatus.CREATED).body(expenseService.addExpense(expense));
     }
 
     @GetMapping("/private")
     public String privatePage(){
+        log.info("Private Endpoint.");
         return "This is Private Page";
     }
 
-    @PutMapping("/update-expense")
-    public ResponseEntity updateExpense(@RequestBody Expense expense, Principal principal){
+
+    @PutMapping("/{id}")
+    public ResponseEntity updateExpense(@RequestBody Expense expense, @PathVariable String id ,Principal principal){
+        log.info("update request "+id);
         expense.setUser(principal.getName());
-        expenseService.updateExpense(expense);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.ok(expenseService.updateExpense(expense,id));
     }
 
     @GetMapping("/all-expenses")
@@ -43,19 +48,26 @@ public class ExpenseController {
     public List<Expense> getAllExpenses(@RequestParam(value = "page", defaultValue = "0") int page,
                                         @RequestParam(value = "limit", defaultValue = "10") int limit,
                                         Principal principal){
-        List<Expense> expenses = expenseService.getAllExpenses(page, limit);
-
-        return expenses.stream().filter(expense -> expense.getUser().equalsIgnoreCase(principal.getName())).toList();
+        log.info("get-all-expenses accessed by == "+principal.getName());
+        List<Expense> expenses = expenseService.getAllExpenses(page, limit, principal.getName());
+        log.info("expenses for user == "+expenses);
+        /*if(expenses.isEmpty()){
+            log.error("No Expenses Found for User {}",principal.getName());
+            throw new NotFoundException("No Expenses Found!!");
+        }
+        log.info("all-expenses-listed here == "+expenses.toString());*/
+        return expenses;
     }
-    @GetMapping("/get-expense/{expenseName}")
+    @GetMapping("/{expenseName}")
     @ResponseStatus(HttpStatus.OK)
     public Expense getExpenseByName(@PathVariable String expenseName,Principal principal){
         return expenseService.getExpenseByName(expenseName, principal.getName());
     }
 
-    @DeleteMapping("/delete-expense")
-    public ResponseEntity deleteExpense(@RequestBody String expenseId){
-        expenseService.deleteExpense(expenseId);
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteExpense(@PathVariable String id){
+        log.info("deleteExpense == "+id);
+        expenseService.deleteExpense(id);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 

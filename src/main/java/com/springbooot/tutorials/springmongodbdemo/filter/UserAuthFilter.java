@@ -1,7 +1,6 @@
 package com.springbooot.tutorials.springmongodbdemo.filter;
 
 
-import com.springbooot.tutorials.springmongodbdemo.model.SecurityUser;
 import com.springbooot.tutorials.springmongodbdemo.service.UserService;
 import com.springbooot.tutorials.springmongodbdemo.util.JwtUtil;
 import jakarta.servlet.FilterChain;
@@ -9,7 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,6 +20,7 @@ import java.io.IOException;
 
 @RequiredArgsConstructor
 @Component
+@Log4j2
 public class UserAuthFilter extends OncePerRequestFilter {
 
     private final UserService userService;
@@ -32,6 +32,7 @@ public class UserAuthFilter extends OncePerRequestFilter {
 
         String requestHeader = request.getHeader("Authorization");
         String token = null;
+        log.info("Header Sent from Request "+requestHeader);
         if(requestHeader != null && requestHeader.startsWith("Bearer_")){
             token = requestHeader.substring(7);
             UserDetails securityUser = userService.loadUserByUsername(jwtUtil.extractUsername(token));
