@@ -8,7 +8,6 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @Document(value = "expense")
@@ -23,7 +22,7 @@ public class Expense {
     @Field(name = "amount")
     private BigDecimal expenseAmount;
     @Field(name = "transactionDate")
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     @Field(name = "user")
     @JsonIgnore
@@ -35,7 +34,7 @@ public class Expense {
     public Expense() {
     }
 
-    public Expense(String id, String expenseName, ExpenseCategory expenseCategory, BigDecimal expenseAmount, Date createdAt, String user, List<ExpenseAtttibute> attributes) {
+    public Expense(String id, String expenseName, ExpenseCategory expenseCategory, BigDecimal expenseAmount, LocalDateTime createdAt, String user, List<ExpenseAtttibute> attributes) {
         this.id = id;
         this.expenseName = expenseName;
         this.expenseCategory = expenseCategory;
@@ -92,11 +91,11 @@ public class Expense {
         this.attributes = attributes;
     }
 
-    public Date getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 

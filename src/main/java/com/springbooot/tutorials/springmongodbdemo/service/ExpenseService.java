@@ -15,6 +15,8 @@ import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.data.mongodb.core.query.TextQuery;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -49,7 +51,7 @@ public class ExpenseService {
             log.error("Expense With Id : {} Already Exists!! Try with Another Id.",expense.getId());
             throw new DuplicateDataException("Expense With Id : "+expense.getId() + "Already Exists!! Try with Another Id.");
         }
-        expense.setCreatedAt(new Date());
+        expense.setCreatedAt(LocalDateTime.now());
         addedExpense = expenseRepository.save(expense);
         log.info("addedExpense == "+addedExpense);
         return addedExpense;

@@ -2,20 +2,16 @@ package com.springbooot.tutorials.springmongodbdemo.model;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.util.Date;
 
 @Document(value = "user")
 @Data
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class User {
 
     @Id
